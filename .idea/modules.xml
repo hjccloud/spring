@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/spring.iml" filepath="$PROJECT_DIR$/spring.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springAnnotation/springAnnotation.iml" filepath="$PROJECT_DIR$/springAnnotation/springAnnotation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spring基于xml事务处理/spring基于xml事务处理.iml" filepath="$PROJECT_DIR$/spring基于xml事务处理/spring基于xml事务处理.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spring案例/spring案例.iml" filepath="$PROJECT_DIR$/spring案例/spring案例.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spring案例注解/spring案例注解.iml" filepath="$PROJECT_DIR$/spring案例注解/spring案例注解.iml" />
+    </modules>
+  </component>
+</project>

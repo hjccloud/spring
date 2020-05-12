@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--
+    单例对象：scope="singleton"
+    一个应用只有一个对象的实例。它的作用范围就是整个引用。
+    生命周期：
+    对象出生：当应用加载，创建容器时，对象就被创建了。
+    对象活着：只要容器在，对象一直活着。
+    对象死亡：当应用卸载，销毁容器时，对象就被销毁了。
+    多例对象：scope="prototype"
+
+    每次访问对象时，都会重新创建对象实例。
+    生命周期：
+    对象出生：当使用对象时，创建新的对象实例。
+    对象活着：只要对象在使用中，就一直活着。
+    对象死亡：当对象长时间不用时，被 java 的垃圾回收器回收了。-->
+
+    <!-- 使用构造函数的方式，给 service 中的属性传值
+    要求：
+    类中需要提供一个对应参数列表的构造函数。
+    涉及的标签：
+    constructor-arg
+    属性：
+    index:指定参数在构造函数参数列表的索引位置
+    type:指定参数在构造函数中的数据类型
+    name:指定参数在构造函数中的名称 用这个找给谁赋值
+    =======上面三个都是找给谁赋值，下面两个指的是赋什么值的==============
+    value:它能赋的值是基本数据类型和 String 类型
+    ref:它能赋的值是其他 bean 类型，也就是说，必须得是在配置文件中配置过的 bean
+    -->
+    <bean id="accountService" class="com.he.service.impl.AccountServiceImpl" scope="prototype" >
+        <!--构造方法注入-->
+        <!--<constructor-arg name="name" value="张三"></constructor-arg>
+        <constructor-arg name="age" value="18"></constructor-arg>
+        <constructor-arg name="birthday" ref="now"></constructor-arg>-->
+        <!--set注入-->
+        <!--<property name="name" value="test"></property>
+        <property name="age" value="21"></property>
+        <property name="birthday" ref="now"></property-->
+    <constructor-arg name="accountDao" ref="accountDao"></constructor-arg>
+    </bean>
+    <bean id="now" class="java.util.Date"></bean>
+    <bean id="accountDao" class="com.he.dao.impl.AccountDaoImpl" scope="prototype"></bean>
+
+
+
+</beans>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--配置AccountService支持事务的代理对象-->
+    <bean id="proxyAccountService" factory-bean="beanFactory" factory-method="getAccountService"></bean>
+    <!--配置BeanFactory-->
+    <bean id="beanFactory" class="com.he.factory.BeanFactory">
+        <!--注入service-->
+        <property name="accountService" ref="accountService"></property>
+        <!--注入事务-->
+        <property name="txManger" ref="txManager"></property>
+    </bean>
+
+    <!--配置AOP-->
+    <aop:config>
+        <!--配置切入点表达式，ID属性用于指定表达式的唯一标识，expression实行用于指定表达式的内容
+            此标签写在aop：aspect标签内部职能当前切面使用。
+            它还可以写在aop：aspect外面，此时就变成了所有切面可用，且必须放在aspect标签之前-->
+
+
+        <aop:aspect id="txAdvice" ref="txManager">
+            <aop:pointcut id="pt" expression="execution(* com.he.service.Impl.*.*(..))"></aop:pointcut>
+            <aop:before method="beginTransaction" pointcut-ref="pt"></aop:before>
+            <aop:after-returning method="commit" pointcut-ref="pt"></aop:after-returning>
+            <aop:after-throwing method="rollback" pointcut-ref="pt"></aop:after-throwing>
+            <aop:after method="release" pointcut-ref="pt"></aop:after>
+        </aop:aspect>
+
+    </aop:config>
+
+    <bean id="txManager" class="com.he.utils.TransactionManager">
+        <property name="connectionUtils" ref="connectionUtils"></property>
+    </bean>
+
+    <!-- 配置Connection的工具类 ConnectionUtils -->
+    <bean id="connectionUtils" class="com.he.utils.ConnectionUtils">
+        <!-- 注入数据源-->
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+
+    <bean id="accountService" class="com.he.service.Impl.AccountServiceImpl">
+        <!--注入dao-->
+        <property name="accountDao" ref="accountDao"></property>
+    </bean>
+
+    <bean id="accountDao" class="com.he.dao.Impl.AccountDaoImpl">
+        <!--注入runnner对象-->
+        <property name="runner" ref="runner"></property>
+
+    </bean>
+    <bean id="runner" class="org.apache.commons.dbutils.QueryRunner" scope="prototype">
+        <!--注入数据源-->
+        <constructor-arg name="ds" ref="dataSource"></constructor-arg>
+    </bean>
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <!--链接数据库的信息-->
+        <property name="driverClass" value="com.mysql.cj.jdbc.Driver"></property>
+        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/spring?serverTimezone=UTC"></property>
+        <property name="user" value="root"></property>
+        <property name="password" value="root"></property>
+    </bean>
+
+    <!--配置spring开启注解aop的支持-->
+    <aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+</beans>
